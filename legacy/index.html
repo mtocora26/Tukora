@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Practice Platform</title>
+    <meta name="description" content="Plataforma interactiva para practicar verbos irregulares en inglés con seguimiento de progreso personal.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1>English Practice</h1>
+            </div>
+            <nav class="main-nav">
+                <button class="nav-btn active" id="nav-dashboard">Dashboard</button>
+                <button class="nav-btn"        id="nav-progress">📊 Mi Progreso</button>
+                <a href="icfes.html" class="nav-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">📝 Simulacro ICFES</a>
+            </nav>
+        </header>
+
+        <main class="content-area">
+
+            <!-- ── Dashboard View ── -->
+            <div id="dashboard-view">
+                <section class="welcome-section">
+                    <h2>Bienvenido a tu práctica de inglés</h2>
+                    <p>Selecciona un ejercicio para comenzar. Tu progreso se guarda automáticamente.</p>
+                </section>
+
+                <!-- Lists & Filter section -->
+                <section class="lists-section" style="margin-bottom: 2rem; background: var(--surface-light); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <h3 style="margin:0; font-size: 1.1rem; color: var(--text-primary);">📑 Filtro Global de Verbos</h3>
+                        <div style="display:flex; gap: 0.5rem;">
+                            <button id="manage-lists-btn" class="start-btn secondary-btn" style="padding: 0.5rem 1rem; font-size:0.85rem; margin:0;">Editar Listas</button>
+                            <button id="create-list-btn" class="start-btn" style="padding: 0.5rem 1rem; font-size:0.85rem; margin:0;">+ Nueva Lista</button>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">Selecciona qué conjunto de verbos quieres usar en TODAS las actividades (incluyendo Context Hunt y Flashcards):</p>
+                    <select id="global-pool-select" style="width:100%; padding: 0.8rem; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); outline: none; font-size: 1rem; font-family: var(--font-family);">
+                        <option value="all">🌐 Todos los verbos (Cualquiera)</option>
+                        <option value="learning">📖 Solo verbos "Me falta"</option>
+                        <!-- Custom lists injected here -->
+                    </select>
+                </section>
+
+                <!-- Stats bar -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-known">0</span>
+                        <span class="stat-label">✅ Ya me la sé</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-learning">0</span>
+                        <span class="stat-label">📖 Me falta</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-sessions">0</span>
+                        <span class="stat-label">📅 Sesiones</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-streak">0</span>
+                        <span class="stat-label">🔥 Mejor racha</span>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════ -->
+                <!-- SECTION BLOCK: ICFES SABER 11          -->
+                <!-- ═══════════════════════════════════════ -->
+                <div class="tense-block" id="section-icfes" style="border: 1px solid rgba(245, 158, 11, 0.4); margin-bottom: 2rem; background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(139,92,246,0.05)); border-radius: 12px;">
+                    <div class="tense-header" id="tense-header-icfes" style="border-bottom: none; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <div class="tense-header-left" style="display: flex; align-items: center; gap: 1rem;">
+                            <span class="tense-icon" style="font-size: 2rem;">📝</span>
+                            <div>
+                                <h2 class="tense-title" style="margin: 0; font-size: 1.3rem; background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Pruebas ICFES Saber 11</h2>
+                                <p class="tense-subtitle" style="margin: 4px 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">Prepárate para la sección de inglés del examen de estado con las 7 partes oficiales.</p>
+                            </div>
+                        </div>
+                        <a href="icfes.html" class="start-btn" style="width: auto; padding: 0.6rem 1.5rem; background: linear-gradient(135deg, #f59e0b, #ef4444); text-decoration: none; text-align: center; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; border-radius: 8px;">
+                            Ir al Simulacro ⚡
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════ -->
+                <!-- TENSE BLOCK: PAST SIMPLE              -->
+                <!-- ═══════════════════════════════════════ -->
+                <div class="tense-block" id="tense-past-simple">
+                    <div class="tense-header" id="tense-header-past-simple">
+                        <div class="tense-header-left">
+                            <span class="tense-icon">📘</span>
+                            <div>
+                                <h2 class="tense-title">Past Simple</h2>
+                                <p class="tense-subtitle">Pasado Simple — Acciones completadas en el pasado</p>
+                            </div>
+                        </div>
+                        <button class="tense-toggle-btn" id="toggle-past-simple" aria-label="Expandir/Colapsar">
+                            <span class="tense-toggle-icon">▼</span>
+                        </button>
+                    </div>
+                    <div class="tense-body" id="tense-body-past-simple">
+                        <div class="exercises-container" id="exercises-container">
+                            <!-- FSRS Smart Review Card -->
+                            <div class="exercise-card" id="card-fsrs" style="border: 1px solid rgba(99,102,241,0.4); background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1));">
+                                <div class="exercise-icon">🧠</div>
+                                <h3>Repaso Inteligente</h3>
+                                <p>El algoritmo FSRS programa tus repasos en el momento óptimo para maximizar tu retención con mínimo esfuerzo.</p>
+                                <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem; text-align:center;" id="fsrs-due-count">Cargando...</div>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-fsrs-btn" style="background: linear-gradient(135deg, #6366f1, #a855f7);">🧠 Iniciar Repaso Inteligente</button>
+                                </div>
+                            </div>
+
+                            <!-- Irregular Verbs Card (Writing) -->
+                            <div class="exercise-card" id="card-irregular-verbs">
+                                <div class="exercise-icon">✍️</div>
+                                <h3>Práctica Escrita</h3>
+                                <p>Escribe el pasado y el significado de los verbos en inglés.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn">▶ Practicar todos</button>
+                                    <button class="start-btn start-learning-btn secondary-btn">📖 Solo "Me falta"</button>
+                                </div>
+                            </div>
+
+                            <!-- Flashcards Normales (Reading/Memory) -->
+                            <div class="exercise-card" id="card-flashcards-normal">
+                                <div class="exercise-icon">📇</div>
+                                <h3>Flashcards Normales</h3>
+                                <p>Adivina el pasado y el significado de un verbo viendo su presente.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-flashcards-normal-btn">▶ Iniciar Flashcards Normales</button>
+                                </div>
+                            </div>
+
+                            <!-- Flashcards Card (Reading/Memory) -->
+                            <div class="exercise-card" id="card-flashcards">
+                                <div class="exercise-icon">🃏</div>
+                                <h3>Flashcards Inversas</h3>
+                                <p>Adivina el significado y el presente de un verbo viendo su pasado.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-flashcards-btn">▶ Iniciar Flashcards</button>
+                                </div>
+                            </div>
+
+                            <!-- Sentence Completion Card -->
+                            <div class="exercise-card" id="card-sentences">
+                                <div class="exercise-icon">📝</div>
+                                <h3>Completar Oraciones</h3>
+                                <p>Practica el pasado en oraciones afirmativas, negativas y preguntas.</p>
+                                <div class="card-buttons">
+                                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-direction: column;">
+                                        <select id="sentences-mode-select" style="padding: 0.65rem; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); outline: none; font-family: 'Inter', sans-serif;">
+                                            <option value="all" selected style="background: var(--bg-color);">Cualquier verbo</option>
+                                            <option value="learning" style="background: var(--bg-color);">Solo verbos por aprender ("Me falta" / Nuevos)</option>
+                                        </select>
+                                        <select id="sentences-count-select" style="padding: 0.65rem; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); outline: none; font-family: 'Inter', sans-serif;">
+                                            <option value="5" style="background: var(--bg-color);">5 oraciones (Rápido)</option>
+                                            <option value="10" selected style="background: var(--bg-color);">10 oraciones (Normal)</option>
+                                            <option value="20" style="background: var(--bg-color);">20 oraciones (Intenso)</option>
+                                            <option value="all" style="background: var(--bg-color);">Todas las disponibles</option>
+                                        </select>
+                                    </div>
+                                    <button class="start-btn" id="start-sentences-btn">▶ Iniciar Práctica</button>
+                                </div>
+                            </div>
+
+                            <!-- Reading Comprehension Card -->
+                            <div class="exercise-card" id="card-reading">
+                                <div class="exercise-icon">📖</div>
+                                <h3>Comprensión de Lectura</h3>
+                                <p>Lee historias cortas y responde preguntas para entrenar tu uso del pasado simple.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-reading-btn">▶ Iniciar Lectura</button>
+                                </div>
+                            </div>
+
+                            <!-- The Bridge Card -->
+                            <div class="exercise-card" id="card-bridge">
+                                <div class="exercise-icon">🌉</div>
+                                <h3>The Bridge</h3>
+                                <p>Asociación Directa: Une el presente, pasado y español arrastrando las burbujas para formar el Trío Dinámico. Solo verbos sin aprender.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-bridge-btn" style="background: linear-gradient(135deg, #10b981, #059669);">▶ Construir el Puente</button>
+                                </div>
+                            </div>
+
+                            <!-- Time Attack Card -->
+                            <div class="exercise-card" id="card-time-attack">
+                                <div class="exercise-icon">⏱️</div>
+                                <h3>Contrarreloj</h3>
+                                <p>60 segundos. Aparece en español, escribe el presente rápido. ¡No pierdas tiempo!</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-time-attack-btn">⚡ Iniciar Reto</button>
+                                </div>
+                            </div>
+
+                            <!-- Context Hunt Card -->
+                            <div class="exercise-card" id="card-context-hunt">
+                                <div class="exercise-icon">🕵️</div>
+                                <h3>Context Hunt</h3>
+                                <p>Ve la imagen, identifica la acción y elige el verbo en pasado correcto. Modo detective con cronómetro.</p>
+                                <div class="card-buttons">
+                                    <a href="contextHunt.html" class="start-btn" id="start-context-hunt-btn" style="display:inline-block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#f59e0b,#ef4444);">🔍 Iniciar Context Hunt</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════ -->
+                <!-- TENSE BLOCK: PAST CONTINUOUS           -->
+                <!-- ═══════════════════════════════════════ -->
+                <div class="tense-block" id="tense-past-continuous">
+                    <div class="tense-header tense-header--continuous" id="tense-header-past-continuous">
+                        <div class="tense-header-left">
+                            <span class="tense-icon">📗</span>
+                            <div>
+                                <h2 class="tense-title">Past Continuous</h2>
+                                <p class="tense-subtitle">Pasado Continuo — Acciones en progreso en el pasado (was/were + -ing)</p>
+                            </div>
+                        </div>
+                        <button class="tense-toggle-btn" id="toggle-past-continuous" aria-label="Expandir/Colapsar">
+                            <span class="tense-toggle-icon">▼</span>
+                        </button>
+                    </div>
+                    <div class="tense-body" id="tense-body-past-continuous">
+                        <div class="exercises-container" id="exercises-container-pc">
+
+                            <!-- PC: Completar Oraciones -->
+                            <div class="exercise-card" id="card-pc-sentences">
+                                <div class="exercise-icon">📝</div>
+                                <h3>Completar Oraciones</h3>
+                                <p>Practica el pasado continuo: completa con <strong>was/were + verbo-ing</strong> en afirmativas, negativas y preguntas.</p>
+                                <div class="card-buttons">
+                                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-direction: column;">
+                                        <select id="pc-sentences-count-select" style="padding: 0.65rem; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); outline: none; font-family: 'Inter', sans-serif;">
+                                            <option value="5" style="background: var(--bg-color);">5 oraciones (Rápido)</option>
+                                            <option value="10" selected style="background: var(--bg-color);">10 oraciones (Normal)</option>
+                                            <option value="20" style="background: var(--bg-color);">20 oraciones (Intenso)</option>
+                                            <option value="all" style="background: var(--bg-color);">Todas las disponibles</option>
+                                        </select>
+                                    </div>
+                                    <button class="start-btn" id="start-pc-sentences-btn" style="background: linear-gradient(135deg, #10b981, #06b6d4);">▶ Iniciar Práctica</button>
+                                </div>
+                            </div>
+
+                            <!-- PC: Lectura Comprensiva -->
+                            <div class="exercise-card" id="card-pc-reading">
+                                <div class="exercise-icon">📖</div>
+                                <h3>Comprensión de Lectura</h3>
+                                <p>Lee historias que usan el pasado continuo y responde preguntas de comprensión.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-pc-reading-btn" style="background: linear-gradient(135deg, #10b981, #06b6d4);">▶ Iniciar Lectura</button>
+                                </div>
+                            </div>
+
+                            <!-- PC: Flashcards -->
+                            <div class="exercise-card" id="card-pc-flashcards">
+                                <div class="exercise-icon">🃏</div>
+                                <h3>Flashcards de Reglas</h3>
+                                <p>Repasa cuándo usar <strong>was</strong> vs <strong>were</strong> y las reglas para agregar <strong>-ing</strong> a los verbos.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-pc-flashcards-btn" style="background: linear-gradient(135deg, #10b981, #06b6d4);">▶ Iniciar Flashcards</button>
+                                </div>
+                            </div>
+
+                            <!-- PC: Was vs Were -->
+                            <div class="exercise-card" id="card-pc-waswere">
+                                <div class="exercise-icon">⚡</div>
+                                <h3>Was vs Were</h3>
+                                <p>Elige entre <strong>was</strong> o <strong>were</strong> según el sujeto. Practica rápido y sin errores.</p>
+                                <div class="card-buttons">
+                                    <button class="start-btn" id="start-pc-waswere-btn" style="background: linear-gradient(135deg, #10b981, #06b6d4);">⚡ Iniciar Reto</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Exercise View ── -->
+            <div id="exercise-view" class="hidden">
+                <div class="exercise-header">
+                    <button class="back-btn" id="back-to-dashboard">← Volver</button>
+                    <div class="score-display">Puntos: <span id="score">0</span></div>
+                </div>
+
+                <div class="exercise-content-area">
+                    <h2 class="exercise-title" id="exercise-title">Verbos Irregulares</h2>
+                    <div id="exercise-container">
+                        <!-- injected by app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Progress View ── -->
+            <div id="progress-view" class="hidden">
+                <div id="progress-container">
+                    <!-- injected by app.js -->
+                </div>
+            </div>
+
+            <!-- ── The Bridge View ── -->
+            <div id="bridge-view" class="hidden">
+                <div class="exercise-header">
+                    <button class="back-btn" id="bridge-back-btn">← Volver</button>
+                    <div class="score-display">Puntos: <span id="bridge-score">0</span></div>
+                </div>
+
+                <div class="exercise-content-area" style="padding: 2.5rem 2rem;">
+                    <h2 class="exercise-title" style="margin-bottom: 0.5rem; background: linear-gradient(to right, #10b981, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">The Bridge</h2>
+                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.05rem;">Arrastra el pasado y el español hacia su verbo en presente.</p>
+                    
+                    <div id="bridge-feedback" class="feedback-message" style="margin-bottom: 1.5rem; min-height: 2rem;"></div>
+
+                    <!-- Pool of draggables -->
+                    <div id="bridge-pool" style="display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-bottom: 2.5rem; min-height: 80px; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 16px; border: 2px dashed rgba(255,255,255,0.15);">
+                    </div>
+
+                    <!-- Target rows -->
+                    <div id="bridge-targets" style="display: flex; flex-direction: column; gap: 1rem;">
+                    </div>
+
+                    <div class="action-buttons" style="margin-top: 2rem;">
+                        <button class="check-btn" id="bridge-next-btn" style="display:none; width: 100%;">Siguiente Ronda →</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- List Creation Modal -->
+    <div id="list-modal" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; display:flex; align-items:center; justify-content:center; padding: 1rem; backdrop-filter: blur(5px);">
+        <div style="background:var(--surface-color); padding: 2rem; border-radius:16px; width:100%; max-width:500px; max-height:90vh; display:flex; flex-direction:column; border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            <h2 id="list-modal-title" style="margin-bottom: 1rem;">Crear Lista de Verbos</h2>
+            <input type="text" id="list-name-input" placeholder="Ej: Clase del Martes, Verbos difíciles..." style="padding:0.8rem; border-radius:8px; border:1px solid var(--border-color); background:rgba(0,0,0,0.2); color:white; margin-bottom: 1rem; width:100%; font-family: var(--font-family); font-size: 1rem;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <span style="color:var(--text-secondary); font-size: 0.9rem;">Selecciona los verbos:</span>
+                <button id="list-select-all-btn" style="background:none; border:none; color:var(--primary-color); cursor:pointer; font-weight:bold; font-size:0.85rem;">Seleccionar Todos</button>
+            </div>
+            
+            <div id="list-verbs-container" style="flex:1; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:8px; border:1px solid var(--border-color); padding: 0.5rem; display:flex; flex-direction:column; gap:2px; margin-bottom: 1.5rem;">
+                <!-- checkboxes injected here -->
+            </div>
+            
+            <div style="display:flex; gap: 1rem;">
+                <button id="list-cancel-btn" class="back-btn" style="flex:1;">Cancelar</button>
+                <button id="list-save-btn" class="start-btn" style="flex:1;">Guardar Lista</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Lists Modal -->
+    <div id="manage-lists-modal" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; display:flex; align-items:center; justify-content:center; padding: 1rem; backdrop-filter: blur(5px);">
+        <div style="background:var(--surface-color); padding: 2rem; border-radius:16px; width:100%; max-width:500px; max-height:90vh; display:flex; flex-direction:column; border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            <h2 style="margin-bottom: 1.5rem;">Mis Listas de Verbos</h2>
+            
+            <div id="manage-lists-container" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:0.8rem; margin-bottom: 1.5rem;">
+                <!-- list items injected here -->
+            </div>
+            
+            <button id="manage-lists-close-btn" class="back-btn" style="width: 100%;">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="assets/js/fsrs.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/flashcardsNormal.js"></script>
+    <script src="assets/js/fsrsPractice.js"></script>
+    <script src="assets/js/pastContinuous.js"></script>
+</body>
+</html>
