@@ -1,46 +1,29 @@
-# learnEnglishwithManu
+# Tukola — Plataforma personal de idiomas
 
-## Agregar nuevas preguntas al simulacro ICFES
+Proyecto personal de aprendizaje de idiomas (italiano + inglés de negocios), construido como ejercicio deliberado de ingeniería de software: arquitectura, patrones de diseño, backlog y kanban — no solo "vibe coding".
 
-Para evitar editar el archivo grande de logica, ahora puedes agregar preguntas en:
+> 🔄 **En migración a React** (Vite, sin backend por ahora). El código original en vanilla JS (verbos irregulares, ICFES, Context Hunt) quedó archivado en [`/legacy`](./legacy/README.md) como referencia.
 
-- `assets/js/icfes.questionBank.js`
+## 📚 Documentación de arquitectura y proceso
 
-### Opciones para agregar preguntas
+- [Arquitectura actual y objetivo](./docs/01-arquitectura/ARQUITECTURA.md)
+- [Decisiones de arquitectura (ADRs)](./docs/01-arquitectura/decisiones/)
+- [Backlog por épicas](./docs/02-producto/BACKLOG.md)
+- [Tablero Kanban](./docs/02-producto/KANBAN.md)
+- [Roadmap por fases](./docs/03-proceso/ROADMAP.md)
+- [Flujo de trabajo (ramas, commits, Definition of Done)](./docs/03-proceso/CONTRIBUTING.md)
 
-1. Lista plana global en `window.ICFES_EXTRA_QUESTIONS`.
-2. Listas separadas por parte en `window.ICFES_EXTRA_QUESTIONS_BY_PART`.
+## Desarrollo (React + Vite)
 
-### Estructura minima de una pregunta
+Requisitos: Node.js LTS instalado.
 
-```js
-{
-	part: 1,
-	id: 101,
-	questionText: "¿Dónde verías este aviso?",
-	options: ["Airport", "Restaurant", "Hospital", "Library"],
-	correctIndex: 0,
-	tema: "Vocabulary in Context",
-	nivel: "A2",
-	retroalimentacion: "La palabra 'Passengers' indica contexto de aeropuerto."
-}
+```bash
+npm install       # instalar dependencias
+npm run dev       # levantar servidor de desarrollo (http://localhost:5173)
+npm run build     # generar build de producción en /dist
+npm run lint      # correr ESLint
 ```
 
-### Campos opcionales
+## Código archivado (`/legacy`)
 
-- `quote`
-- `blockId`
-- `blockTitle`
-- `situationId`
-- `situationTitle`
-- `partTitle`
-- `partDesc`
-
-Si no envias `partTitle` o `partDesc`, se rellenan automaticamente usando la configuracion de la parte.
-
-### Logica de bloques por parte
-
-- La app ahora trabaja por bloques de preguntas dentro de cada parte.
-- Si defines `blockId` y `blockTitle`, esas preguntas quedan en ese bloque.
-- Si no defines bloques y una parte tiene muchas preguntas, el sistema la divide automaticamente en bloques para evitar pruebas demasiado largas.
-- `situationId` y `situationTitle` siguen siendo compatibles para contenido antiguo.
+La versión anterior (vanilla JS) sigue funcionando abriendo [`legacy/index.html`](./legacy/index.html) directamente en el navegador. Ver [`legacy/README.md`](./legacy/README.md) para instrucciones (incluye cómo agregar preguntas al simulacro ICFES, si algún día se retoma).
