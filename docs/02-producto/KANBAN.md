@@ -8,7 +8,6 @@ Tablero simple en markdown. Muévete de columna editando este archivo (o migra a
 > Todo lo que vive en [BACKLOG.md](./BACKLOG.md) y no está priorizado para ahora.
 
 ## ✅ Ready (próximas 1-2 semanas)
-- [ ] EPIC-07-05 — `ExerciseContainer` genérico (#6)
 - [ ] EPIC-07-04 — Portar FSRS a módulo ES puro (#7)
 - [ ] EPIC-07-06 — Reducer de sesión de estudio (#5)
 
@@ -16,7 +15,7 @@ Tablero simple en markdown. Muévete de columna editando este archivo (o migra a
 _(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
 
 ## 👀 Review (autorevisión antes de mergear)
-_(vacío)_
+- [ ] EPIC-07-05 — `ExerciseContainer` genérico (#6) — rama `feature/EPIC-07-05-exercise-container`
 
 ## 🎉 Done
 - [x] EPIC-07-03 — Contrato de hook de ejercicio `useExercise` (PR #11) — 2026-09-23
