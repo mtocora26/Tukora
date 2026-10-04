@@ -74,6 +74,15 @@ export function validateCourse(course) {
   return course
 }
 
+/** @returns {{ module: object, lesson: object } | null} */
+export function findLesson(course, lessonId) {
+  for (const module of course.modules) {
+    const lesson = module.lessons.find((item) => item.id === lessonId)
+    if (lesson) return { module, lesson }
+  }
+  return null
+}
+
 function validateAlphabet(alphabet, path) {
   assertNonEmptyArray(alphabet, path)
   const letters = new Set()
