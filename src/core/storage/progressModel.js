@@ -46,6 +46,35 @@ export function validateProgress(courseId, progress) {
   }
 }
 
+/**
+ * Returns a copy of `progress` with one more completed attempt of an exercise.
+ * The latest score wins; `completedAt` keeps the first completion date.
+ *
+ * @param {object} progress
+ * @param {{ exerciseId: string, score: number, now: string }} attempt
+ * @returns {object}
+ */
+export function recordExerciseAttempt(progress, { exerciseId, score, now }) {
+  assertIdentifier(exerciseId, 'exerciseId')
+  assertTimestamp(now, 'now')
+
+  const previous = progress.exercises[exerciseId]
+  const exercise = {
+    exerciseId,
+    status: 'completed',
+    score,
+    attempts: (previous?.attempts ?? 0) + 1,
+    updatedAt: now,
+    completedAt: previous?.completedAt ?? now,
+  }
+  validateExerciseProgress(exerciseId, exercise)
+
+  return {
+    ...progress,
+    exercises: { ...progress.exercises, [exerciseId]: exercise },
+  }
+}
+
 function validateExerciseProgress(exerciseId, exercise) {
   if (!isRecord(exercise)) {
     throw new TypeError(`progress for exercise "${exerciseId}" must be an object`)
