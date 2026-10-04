@@ -20,6 +20,7 @@ export const SAVE_STATUSES = Object.freeze({
  *   courseId: string,
  *   exerciseId: string,
  *   exercise: { state: { status: string }, stats: { accuracy: number } },
+ *   xp?: number,
  * }} options
  * @returns {{ record: object | null, saveStatus: string, error: Error | null }}
  */
@@ -28,12 +29,13 @@ export function useExerciseProgress({
   courseId,
   exerciseId,
   exercise,
+  xp = 0,
 }) {
   const [record, setRecord] = useState(null)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState(null)
 
-  const completed = exercise.state.status === EXERCISE_STATES.COMPLETED
+  const completed = exercise.state.status === EXERCISE_STATES.DONE
   const score = exercise.stats.accuracy
 
   useEffect(() => {
@@ -70,6 +72,7 @@ export function useExerciseProgress({
           recordExerciseAttempt(progress, {
             exerciseId,
             score,
+            xp,
             now: new Date().toISOString(),
           }),
         ),
@@ -79,7 +82,7 @@ export function useExerciseProgress({
         setSaved(true)
       })
       .catch(setError)
-  }, [completed, repository, courseId, exerciseId, score])
+  }, [completed, repository, courseId, exerciseId, score, xp])
 
   return {
     record,
