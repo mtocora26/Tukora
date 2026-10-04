@@ -16,6 +16,8 @@ test('records the first completed attempt of an exercise', () => {
     exerciseId: 'saluti-1',
     status: 'completed',
     score: 80,
+    bestScore: 80,
+    xp: 0,
     attempts: 1,
     updatedAt: FIRST,
     completedAt: FIRST,
@@ -62,4 +64,49 @@ test('rejects scores outside 0-100', () => {
       }),
     TypeError,
   )
+})
+
+test('keeps the best score and accumulates xp', () => {
+  const first = recordExerciseAttempt(createEmptyProgress('italian-a1'), {
+    exerciseId: 'saluti-1',
+    score: 90,
+    xp: 100,
+    now: FIRST,
+  })
+  const second = recordExerciseAttempt(first, {
+    exerciseId: 'saluti-1',
+    score: 50,
+    xp: 40,
+    now: SECOND,
+  })
+
+  assert.equal(second.exercises['saluti-1'].score, 50)
+  assert.equal(second.exercises['saluti-1'].bestScore, 90)
+  assert.equal(second.exercises['saluti-1'].xp, 140)
+})
+
+test('upgrades records saved before bestScore and xp existed', () => {
+  const legacy = {
+    courseId: 'italian-a1',
+    updatedAt: null,
+    exercises: {
+      'saluti-1': {
+        exerciseId: 'saluti-1',
+        status: 'completed',
+        score: 70,
+        attempts: 1,
+        updatedAt: FIRST,
+        completedAt: FIRST,
+      },
+    },
+  }
+  const next = recordExerciseAttempt(legacy, {
+    exerciseId: 'saluti-1',
+    score: 60,
+    xp: 10,
+    now: SECOND,
+  })
+
+  assert.equal(next.exercises['saluti-1'].bestScore, 70)
+  assert.equal(next.exercises['saluti-1'].xp, 10)
 })

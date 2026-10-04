@@ -48,13 +48,14 @@ export function validateProgress(courseId, progress) {
 
 /**
  * Returns a copy of `progress` with one more completed attempt of an exercise.
- * The latest score wins; `completedAt` keeps the first completion date.
+ * `score` is the latest attempt, `bestScore` the highest one, `xp` accumulates
+ * and `completedAt` keeps the first completion date.
  *
  * @param {object} progress
- * @param {{ exerciseId: string, score: number, now: string }} attempt
+ * @param {{ exerciseId: string, score: number, xp?: number, now: string }} attempt
  * @returns {object}
  */
-export function recordExerciseAttempt(progress, { exerciseId, score, now }) {
+export function recordExerciseAttempt(progress, { exerciseId, score, xp = 0, now }) {
   assertIdentifier(exerciseId, 'exerciseId')
   assertTimestamp(now, 'now')
 
@@ -63,6 +64,8 @@ export function recordExerciseAttempt(progress, { exerciseId, score, now }) {
     exerciseId,
     status: 'completed',
     score,
+    bestScore: Math.max(previous?.bestScore ?? previous?.score ?? 0, score),
+    xp: (previous?.xp ?? 0) + xp,
     attempts: (previous?.attempts ?? 0) + 1,
     updatedAt: now,
     completedAt: previous?.completedAt ?? now,
@@ -99,6 +102,23 @@ function validateExerciseProgress(exerciseId, exercise) {
       exercise.score > 100)
   ) {
     throw new TypeError('progress.score must be null or a number from 0 to 100')
+  }
+
+  // Optional: records saved before these fields existed do not have them.
+  if (
+    exercise.bestScore !== undefined &&
+    (!Number.isFinite(exercise.bestScore) ||
+      exercise.bestScore < 0 ||
+      exercise.bestScore > 100)
+  ) {
+    throw new TypeError('progress.bestScore must be a number from 0 to 100')
+  }
+
+  if (
+    exercise.xp !== undefined &&
+    (!Number.isInteger(exercise.xp) || exercise.xp < 0)
+  ) {
+    throw new TypeError('progress.xp must be a non-negative integer')
   }
 
   if (!Number.isInteger(exercise.attempts) || exercise.attempts < 0) {
