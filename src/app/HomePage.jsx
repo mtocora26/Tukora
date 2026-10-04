@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { COURSES } from '../content/courses/index.js'
+import { lessonPath } from '../features/lessons/paths.js'
 
 function HomePage() {
   return (
@@ -16,7 +17,7 @@ function HomePage() {
               <ol>
                 {module.lessons.map((lesson) => (
                   <li key={lesson.id}>
-                    <Link to={`/curso/${course.id}/leccion/${lesson.id}`}>
+                    <Link to={lessonPath(course.id, lesson.id)}>
                       {lesson.title}
                     </Link>
                   </li>

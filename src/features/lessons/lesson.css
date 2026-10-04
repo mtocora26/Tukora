@@ -1,0 +1,152 @@
+/* Intro + theory */
+.lesson-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lesson-intro h2 {
+  margin: 0;
+}
+
+.lesson-intro__footer {
+  position: sticky;
+  bottom: 0;
+  padding: 12px 0 16px;
+  background: var(--bg);
+  box-shadow: 0 -12px 12px -4px var(--bg);
+}
+
+.lesson-intro__start {
+  width: 100%;
+  font: inherit;
+  font-weight: 600;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.theory {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.theory p {
+  margin: 0;
+}
+
+.theory__tip {
+  padding: 10px 14px;
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--accent-bg);
+}
+
+.theory__example {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.theory__example blockquote {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.theory__example figcaption {
+  font-size: 15px;
+}
+
+.theory__table-wrapper {
+  overflow-x: auto;
+}
+
+.theory__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.theory__table th,
+.theory__table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.theory__table th {
+  color: var(--text-h);
+  background: var(--surface);
+}
+
+/* Result */
+.lesson-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lesson-result p {
+  margin: 0;
+}
+
+.lesson-result__stars {
+  display: flex;
+  gap: 8px;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.lesson-result__star {
+  color: var(--border);
+}
+
+.lesson-result__star--on {
+  color: #f5b700;
+  animation: star-in 0.4s ease-out both;
+}
+
+@keyframes star-in {
+  from { transform: scale(0) rotate(-45deg); opacity: 0; }
+  70% { transform: scale(1.25); }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-result__star--on {
+    animation: none;
+  }
+}
+
+.lesson-result__xp {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.lesson-result__breakdown {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.lesson-result__note {
+  font-size: 14px;
+}
+
+.lesson-result__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}

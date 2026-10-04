@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { progressRepository } from '../../app/progressRepository.js'
 import { getCourse } from '../../content/courses/index.js'
-import { findLesson } from '../../domain/course.js'
-import { useExercise } from '../../hooks/useExercise.js'
+import { starsForAccuracy, xpForSession } from '../../core/gamification/scoring.js'
+import { findLesson, findNextLesson } from '../../domain/course.js'
+import { EXERCISE_STATES, useExercise } from '../../hooks/useExercise.js'
 import { useExerciseProgress } from '../../hooks/useExerciseProgress.js'
 import ExerciseContainer from '../exercises/ExerciseContainer.jsx'
 import { ANSWER_COMPONENTS } from '../exercises/types/answerComponents.js'
@@ -13,7 +14,11 @@ import {
   correctAnswerText,
   prepareExercise,
 } from '../exercises/types/exerciseLogic.js'
+import LessonResult from './LessonResult.jsx'
+import LessonTheory from './LessonTheory.jsx'
+import { lessonPath } from './paths.js'
 import '../exercises/types/exerciseTypes.css'
+import './lesson.css'
 
 function LessonPage() {
   const { courseId, lessonId } = useParams()
@@ -31,7 +36,7 @@ function LessonPage() {
 
   // A new key remounts the lesson: fresh shuffle and a fresh attempt.
   return (
-    <LessonExercises
+    <LessonPlayer
       key={`${lessonId}-${round}`}
       course={course}
       lesson={found.lesson}
@@ -40,7 +45,8 @@ function LessonPage() {
   )
 }
 
-function LessonExercises({ course, lesson, onRestart }) {
+/** Theory → exercises → review of mistakes → result (stars and XP). */
+function LessonPlayer({ course, lesson, onRestart }) {
   const context = { alphabet: course.alphabet }
   const [items] = useState(() =>
     lesson.exercises.map((exercise) =>
@@ -50,13 +56,32 @@ function LessonExercises({ course, lesson, onRestart }) {
   const exercise = useExercise({
     items,
     validateAnswer: (value, item) => checkAnswer(value, item, context),
+    reviewMistakes: true,
+    startImmediately: false,
   })
+  const xp = xpForSession(exercise.stats)
   const progress = useExerciseProgress({
     repository: progressRepository,
     courseId: course.id,
     exerciseId: lesson.id,
     exercise,
+    xp: xp.total,
   })
+  const nextLesson = findNextLesson(course, lesson.id)
+
+  if (exercise.state.status === EXERCISE_STATES.IDLE) {
+    return (
+      <section className="lesson-intro">
+        <h2>{lesson.title}</h2>
+        <LessonTheory blocks={lesson.theory} />
+        <div className="lesson-intro__footer">
+          <button type="button" className="lesson-intro__start" onClick={exercise.start}>
+            Empezar · {lesson.exercises.length} ejercicios
+          </button>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <ExerciseContainer
@@ -81,10 +106,12 @@ function LessonExercises({ course, lesson, onRestart }) {
       )}
       onRestart={onRestart}
     >
-      {progress.saveStatus === 'error' && (
-        <p role="alert">No se pudo guardar el progreso.</p>
-      )}
-      <Link to="/">Volver a las lecciones</Link>
+      <LessonResult
+        stars={starsForAccuracy(exercise.stats.accuracy)}
+        xp={xp}
+        progress={progress}
+        nextLessonPath={nextLesson && lessonPath(course.id, nextLesson.id)}
+      />
     </ExerciseContainer>
   )
 }
