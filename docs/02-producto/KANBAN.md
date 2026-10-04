@@ -9,13 +9,15 @@ Tablero simple en markdown. Muévete de columna editando este archivo (o migra a
 
 ## ✅ Ready (próximas 1-2 semanas)
 - [ ] EPIC-07-04 — Portar FSRS a módulo ES puro (#7)
-- [ ] EPIC-07-06 — Reducer de sesión de estudio (#5)
 
 ## 🔨 In Progress
 _(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
 
 ## 👀 Review (autorevisión antes de mergear)
 - [ ] EPIC-07-05 — `ExerciseContainer` genérico (#6) — rama `feature/EPIC-07-05-exercise-container`
+- [ ] EPIC-08-01 — Modelo Course/Module/Lesson/Exercise + módulo 1 de italiano — rama `feature/EPIC-08-01-modelo-curso`
+- [ ] EPIC-08 — Tipos de ejercicio choice/typed/reorder/match/spelling — rama `feature/EPIC-08-tipos-ejercicio`
+- [ ] EPIC-07-06 — Reducer de sesión (#5) + reproductor de lección (teoría, repaso, estrellas, XP) — rama `feature/EPIC-07-06-sesion-y-reproductor`
 
 ## 🎉 Done
 - [x] EPIC-07-03 — Contrato de hook de ejercicio `useExercise` (PR #11) — 2026-09-23

@@ -68,7 +68,11 @@ este flujo creando una segunda instancia conectada al mismo almacenamiento.
 ## Ejercicios
 
 Todo ejercicio usa el hook `useExercise` (`src/hooks/useExercise.js`), que
-devuelve siempre la misma forma `{ state, answer, next, stats }`.
+devuelve siempre la misma forma `{ state, answer, next, start, stats }`.
+Por dentro usa la máquina de estados de sesión
+(`src/core/session/studySession.js`): `idle → active → reviewing → done`.
+Con `reviewMistakes: true`, los ítems fallados se repiten al final hasta
+acertarlos; la puntuación solo cuenta la primera pasada.
 `ExerciseContainer` (`src/features/exercises/`) pinta el flujo común
 (progreso, feedback, siguiente, resumen final) para cualquier ejercicio que
 cumpla ese contrato. Cada tipo de ejercicio solo aporta:
@@ -83,6 +87,22 @@ cumpla ese contrato. Cada tipo de ejercicio solo aporta:
 `ProgressRepository`. La instancia concreta se crea solo en
 `src/app/progressRepository.js`. Hay un ejemplo completo en `/practica/demo`
 (`src/features/exercises/demo/`).
+
+## Cursos y lecciones
+
+El contenido vive en `src/content/courses/<curso>/` y sigue el modelo de
+`src/domain/course.js` (curso → módulos → lecciones → teoría + ejercicios).
+Tipos de ejercicio: `choice`, `typed`, `reorder`, `match` y `spelling`. Un test
+valida todo el contenido, así que un error de datos falla en `npm test` con la
+ruta exacta del campo.
+
+Para agregar un tipo de ejercicio: su lógica (preparar, corregir, respuesta
+correcta) va en `src/features/exercises/types/exerciseLogic.js` y su
+componente se registra en `answerComponents.js`.
+
+Cada lección (`/curso/:courseId/leccion/:lessonId`) muestra la teoría, luego
+los ejercicios, un repaso de errores y el resultado con estrellas y XP
+(reglas en `src/core/gamification/scoring.js`).
 
 ## Código archivado (`/legacy`)
 
