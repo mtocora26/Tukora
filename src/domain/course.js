@@ -71,27 +71,64 @@ export function validateCourse(course) {
     })
   })
 
+  course.modules.forEach((module, m) => {
+    if (ids.has(reviewLessonId(module))) {
+      fail(`course.modules[${m}]`, `"${reviewLessonId(module)}" is reserved for the module review`)
+    }
+  })
+
   return course
+}
+
+export const MODULE_REVIEW_SAMPLE_SIZE = 10
+
+/**
+ * Lessons of a module in order. Modules with 2+ lessons end with a generated
+ * "review" lesson that mixes a random sample of all their exercises.
+ */
+export function moduleLessons(module) {
+  if (module.lessons.length < 2) return module.lessons
+
+  return [
+    ...module.lessons,
+    {
+      id: reviewLessonId(module),
+      title: 'Repaso del módulo',
+      review: true,
+      sampleSize: MODULE_REVIEW_SAMPLE_SIZE,
+      theory: [
+        {
+          type: 'text',
+          text: 'Una mezcla de ejercicios de todas las lecciones del módulo, para fijar lo aprendido.',
+        },
+      ],
+      exercises: module.lessons.flatMap((lesson) => lesson.exercises),
+    },
+  ]
 }
 
 /** @returns {{ module: object, lesson: object } | null} */
 export function findLesson(course, lessonId) {
   for (const module of course.modules) {
-    const lesson = module.lessons.find((item) => item.id === lessonId)
+    const lesson = moduleLessons(module).find((item) => item.id === lessonId)
     if (lesson) return { module, lesson }
   }
   return null
 }
 
-/** Lessons in course order, across modules. */
+/** Lessons in course order, across modules (including module reviews). */
 export function listLessons(course) {
-  return course.modules.flatMap((module) => module.lessons)
+  return course.modules.flatMap(moduleLessons)
 }
 
 export function findNextLesson(course, lessonId) {
   const lessons = listLessons(course)
   const index = lessons.findIndex((lesson) => lesson.id === lessonId)
   return index === -1 ? null : (lessons[index + 1] ?? null)
+}
+
+function reviewLessonId(module) {
+  return `${module.id}-repaso`
 }
 
 function validateAlphabet(alphabet, path) {

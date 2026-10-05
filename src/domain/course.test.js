@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { validateCourse } from './course.js'
+import {
+  findLesson,
+  findNextLesson,
+  listLessons,
+  validateCourse,
+} from './course.js'
 
 function minimalCourse(exercises, extra = {}) {
   return {
@@ -126,4 +131,46 @@ test('requires table rows to match the number of columns', () => {
   ]
 
   assert.throws(() => validateCourse(course), /rows\[0\] must have 2 cells/)
+})
+
+function twoLessonCourse() {
+  const course = minimalCourse([choice])
+  course.modules[0].lessons.push({
+    id: 'l2',
+    title: 'Lesson 2',
+    theory: [],
+    exercises: [{ ...choice, id: 'e2' }],
+  })
+  return course
+}
+
+test('modules with 2+ lessons end with a generated review lesson', () => {
+  const course = twoLessonCourse()
+  const lessons = listLessons(course)
+
+  assert.deepEqual(
+    lessons.map((lesson) => lesson.id),
+    ['l1', 'l2', 'm1-repaso'],
+  )
+  assert.deepEqual(
+    lessons[2].exercises.map((exercise) => exercise.id),
+    ['e1', 'e2'],
+  )
+  assert.equal(findLesson(course, 'm1-repaso').lesson.review, true)
+  assert.equal(findNextLesson(course, 'l2').id, 'm1-repaso')
+  assert.equal(findNextLesson(course, 'm1-repaso'), null)
+})
+
+test('single-lesson modules have no review lesson', () => {
+  assert.deepEqual(
+    listLessons(minimalCourse([choice])).map((lesson) => lesson.id),
+    ['l1'],
+  )
+})
+
+test('the review lesson id is reserved', () => {
+  const course = twoLessonCourse()
+  course.modules[0].lessons[1].id = 'm1-repaso'
+
+  assert.throws(() => validateCourse(course), /reserved for the module review/)
 })
