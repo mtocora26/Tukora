@@ -65,6 +65,25 @@ de `LocalStorageRepository`, llama a `saveProgress`, recarga la página y
 consulta el mismo curso con `getProgress`. Las pruebas automatizadas cubren
 este flujo creando una segunda instancia conectada al mismo almacenamiento.
 
+## Ejercicios
+
+Todo ejercicio usa el hook `useExercise` (`src/hooks/useExercise.js`), que
+devuelve siempre la misma forma `{ state, answer, next, stats }`.
+`ExerciseContainer` (`src/features/exercises/`) pinta el flujo común
+(progreso, feedback, siguiente, resumen final) para cualquier ejercicio que
+cumpla ese contrato. Cada tipo de ejercicio solo aporta:
+
+- `renderPrompt(item)`: cómo se muestra el ítem.
+- `renderAnswer({ item, onAnswer, disabled })`: cómo se responde (por ejemplo
+  `TextAnswerInput`).
+- `renderFeedback({ item, answer, result })` (opcional): feedback específico,
+  como la respuesta esperada.
+
+`useExerciseProgress` guarda un intento al completar el ejercicio a través de
+`ProgressRepository`. La instancia concreta se crea solo en
+`src/app/progressRepository.js`. Hay un ejemplo completo en `/practica/demo`
+(`src/features/exercises/demo/`).
+
 ## Código archivado (`/legacy`)
 
 La versión anterior (vanilla JS) sigue funcionando abriendo [`legacy/index.html`](./legacy/index.html) directamente en el navegador. Ver [`legacy/README.md`](./legacy/README.md) para instrucciones (incluye cómo agregar preguntas al simulacro ICFES, si algún día se retoma).

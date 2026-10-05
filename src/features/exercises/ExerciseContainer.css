@@ -1,0 +1,103 @@
+.exercise {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.exercise h2 {
+  margin: 0;
+}
+
+.exercise button {
+  font: inherit;
+  padding: 8px 18px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.exercise button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.exercise__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exercise__progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.exercise__progress progress {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+.exercise__prompt {
+  padding: 24px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: center;
+  font-size: 24px;
+  color: var(--text-h);
+}
+
+.exercise__feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+
+.exercise__feedback p {
+  margin: 0;
+}
+
+.exercise__feedback--correct {
+  background: var(--success-bg);
+}
+
+.exercise__feedback--incorrect {
+  background: var(--error-bg);
+}
+
+.exercise__feedback-title {
+  font-weight: 700;
+}
+
+.exercise__feedback--correct .exercise__feedback-title {
+  color: var(--success);
+}
+
+.exercise__feedback--incorrect .exercise__feedback-title {
+  color: var(--error);
+}
+
+.exercise__summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.exercise__summary p {
+  margin: 0;
+}
+
+.exercise__score {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-h);
+}
