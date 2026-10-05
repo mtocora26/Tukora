@@ -104,6 +104,12 @@ Cada lección (`/curso/:courseId/leccion/:lessonId`) muestra la teoría, luego
 los ejercicios, un repaso de errores y el resultado con estrellas y XP
 (reglas en `src/core/gamification/scoring.js`).
 
+El mapa del curso (`/curso/:courseId`) muestra las lecciones en orden, con
+estrellas, XP total y candados: cada lección se desbloquea al completar la
+anterior. Los módulos con 2 o más lecciones terminan con un "Repaso del
+módulo" generado automáticamente (10 ejercicios al azar de todo el módulo).
+La lógica está en `src/features/course/courseMap.js`.
+
 ## Código archivado (`/legacy`)
 
 La versión anterior (vanilla JS) sigue funcionando abriendo [`legacy/index.html`](./legacy/index.html) directamente en el navegador. Ver [`legacy/README.md`](./legacy/README.md) para instrucciones (incluye cómo agregar preguntas al simulacro ICFES, si algún día se retoma).

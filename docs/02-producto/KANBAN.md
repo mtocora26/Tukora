@@ -18,6 +18,7 @@ _(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
 - [ ] EPIC-08-01 — Modelo Course/Module/Lesson/Exercise + módulo 1 de italiano — rama `feature/EPIC-08-01-modelo-curso`
 - [ ] EPIC-08 — Tipos de ejercicio choice/typed/reorder/match/spelling — rama `feature/EPIC-08-tipos-ejercicio`
 - [ ] EPIC-07-06 — Reducer de sesión (#5) + reproductor de lección (teoría, repaso, estrellas, XP) — rama `feature/EPIC-07-06-sesion-y-reproductor`
+- [ ] EPIC-08-04 — Mapa del curso con desbloqueo, estrellas, XP y repaso de módulo — rama `feature/EPIC-08-04-mapa-curso`
 
 ## 🎉 Done
 - [x] EPIC-07-03 — Contrato de hook de ejercicio `useExercise` (PR #11) — 2026-09-23
