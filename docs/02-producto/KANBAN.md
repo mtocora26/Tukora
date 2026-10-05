@@ -8,9 +8,9 @@ Tablero simple en markdown. Muévete de columna editando este archivo (o migra a
 > Todo lo que vive en [BACKLOG.md](./BACKLOG.md) y no está priorizado para ahora.
 
 ## ✅ Ready (próximas 1-2 semanas)
-- [ ] EPIC-07-01 — Scaffold Vite + React + Router
-- [ ] EPIC-07-02 — ProgressRepository / LocalStorageRepository
-- [ ] EPIC-07-03 — Contrato de hook de ejercicio
+- [ ] EPIC-07-05 — `ExerciseContainer` genérico (#6)
+- [ ] EPIC-07-04 — Portar FSRS a módulo ES puro (#7)
+- [ ] EPIC-07-06 — Reducer de sesión de estudio (#5)
 
 ## 🔨 In Progress
 _(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
@@ -19,6 +19,9 @@ _(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
 _(vacío)_
 
 ## 🎉 Done
+- [x] EPIC-07-03 — Contrato de hook de ejercicio `useExercise` (PR #11) — 2026-09-23
+- [x] EPIC-07-02 — ProgressRepository / LocalStorageRepository (PR #10) — 2026-09-23
+- [x] EPIC-07-01 — Scaffold Vite + React + Router (PR #2) — 2026-09-23
 - [x] Definir estructura de documentación (arquitectura, backlog, roadmap) — 2026-09-22
 - [x] Decidir stack: React + Vite, Firebase (Firestore + Auth email/password), Capacitor, contenido viejo archivado — 2026-09-22
 

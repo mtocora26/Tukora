@@ -27,17 +27,16 @@ export function useExercise({ items, validateAnswer }) {
     throw new TypeError('useExercise validateAnswer must be a function')
   }
 
-  const [exercise, dispatch] = useReducer(exerciseReducer, {
-    currentIndex: 0,
-    currentAnswer: null,
-    currentResult: null,
-    status: EXERCISE_STATES.ACTIVE,
-    stats: { ...INITIAL_STATS },
-  })
+  const [exercise, dispatch] = useReducer(
+    exerciseReducer,
+    undefined,
+    createInitialExerciseState,
+  )
 
   const state = {
     status: exercise.status,
     currentIndex: exercise.currentIndex,
+    totalItems: items.length,
     currentItem: items[exercise.currentIndex] ?? null,
     answer: exercise.currentAnswer,
     result: exercise.currentResult,
