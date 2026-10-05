@@ -110,6 +110,18 @@ anterior. Los módulos con 2 o más lecciones terminan con un "Repaso del
 módulo" generado automáticamente (10 ejercicios al azar de todo el módulo).
 La lógica está en `src/features/course/courseMap.js`.
 
+## Gamificación y audio
+
+- **XP y niveles**: el XP de cada lección se acumula en su registro; el nivel
+  se calcula del total (nivel n desde 100 · (1 + … + (n−1)) XP).
+- **Racha diaria**: días seguidos con al menos una lección terminada, guardados
+  en `activityDays` del progreso de cada curso.
+- **Audio 🔊**: los ejemplos de teoría y las respuestas se pueden escuchar con la
+  voz del navegador (`speechSynthesis`).
+
+Reglas en `src/core/gamification/`; decisiones en
+[ADR-0005](./docs/01-arquitectura/decisiones/ADR-0005-gamificacion-local-y-audio.md).
+
 ## Código archivado (`/legacy`)
 
 La versión anterior (vanilla JS) sigue funcionando abriendo [`legacy/index.html`](./legacy/index.html) directamente en el navegador. Ver [`legacy/README.md`](./legacy/README.md) para instrucciones (incluye cómo agregar preguntas al simulacro ICFES, si algún día se retoma).

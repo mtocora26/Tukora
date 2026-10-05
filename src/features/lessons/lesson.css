@@ -53,6 +53,13 @@
   border-radius: 8px;
 }
 
+.theory__example-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .theory__example blockquote {
   margin: 0;
   font-weight: 600;
