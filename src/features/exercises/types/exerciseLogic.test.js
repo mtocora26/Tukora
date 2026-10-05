@@ -6,6 +6,7 @@ import {
   correctAnswerText,
   prepareExercise,
   shuffle,
+  speakableText,
 } from './exerciseLogic.js'
 
 const context = { alphabet: ITALIAN_ALPHABET }
@@ -108,4 +109,9 @@ test('correctAnswerText describes the expected answer', () => {
     'A di Ancona – N di Napoli – N di Napoli – A di Ancona',
   )
   assert.equal(correctAnswerText(match), 'io → sono · tu → sei')
+})
+
+test('speakableText skips match exercises', () => {
+  assert.equal(speakableText(reorder), 'Io sono Eva')
+  assert.equal(speakableText(match), null)
 })

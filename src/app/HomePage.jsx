@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom'
 import { COURSES } from '../content/courses/index.js'
 import { listLessons } from '../domain/course.js'
+import PlayerStatsCard from '../features/gamification/PlayerStatsCard.jsx'
 import { coursePath } from '../features/lessons/paths.js'
 
-function HomePage() {
+function HomePage({ stats }) {
   return (
     <section className="home">
       <h1>Tukola</h1>
       <p>Plataforma personal de idiomas: italiano y business English.</p>
+
+      <PlayerStatsCard stats={stats} />
 
       <ul className="home__courses">
         {COURSES.map((course) => (

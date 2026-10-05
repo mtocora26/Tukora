@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { appEvents } from '../../app/appEvents.js'
 import { progressRepository } from '../../app/progressRepository.js'
 import { getCourse } from '../../content/courses/index.js'
 import { starsForAccuracy, xpForSession } from '../../core/gamification/scoring.js'
+import { speechLang } from '../../core/speech/speech.js'
 import { findLesson, findNextLesson } from '../../domain/course.js'
 import { EXERCISE_STATES, useExercise } from '../../hooks/useExercise.js'
 import { useCourseProgress } from '../../hooks/useCourseProgress.js'
@@ -16,7 +18,9 @@ import {
   correctAnswerText,
   prepareExercise,
   shuffle,
+  speakableText,
 } from '../exercises/types/exerciseLogic.js'
+import SpeakButton from '../../ui/SpeakButton.jsx'
 import LessonResult from './LessonResult.jsx'
 import LessonTheory from './LessonTheory.jsx'
 import { coursePath, lessonPath } from './paths.js'
@@ -73,6 +77,7 @@ function LessonPage() {
 /** Theory → exercises → review of mistakes → result (stars and XP). */
 function LessonPlayer({ course, lesson, onRestart }) {
   const context = { alphabet: course.alphabet }
+  const lang = speechLang(course.language)
   const [items] = useState(() => {
     // Module reviews practise a random sample of all their exercises.
     const exercises = lesson.sampleSize
@@ -95,6 +100,7 @@ function LessonPlayer({ course, lesson, onRestart }) {
     exerciseId: lesson.id,
     exercise,
     xp: xp.total,
+    events: appEvents,
   })
   const nextLesson = findNextLesson(course, lesson.id)
 
@@ -102,7 +108,7 @@ function LessonPlayer({ course, lesson, onRestart }) {
     return (
       <section className="lesson-intro">
         <h2>{lesson.title}</h2>
-        <LessonTheory blocks={lesson.theory} />
+        <LessonTheory blocks={lesson.theory} lang={lang} />
         <div className="lesson-intro__footer">
           <button type="button" className="lesson-intro__start" onClick={exercise.start}>
             Empezar · {items.length} ejercicios
@@ -123,11 +129,11 @@ function LessonPlayer({ course, lesson, onRestart }) {
       }}
       renderFeedback={({ item, result }) => (
         <>
-          {result === 'incorrect' && correctAnswerText(item, context) && (
-            <p className="exercise-feedback__answer" lang="it">
-              Respuesta: <strong>{correctAnswerText(item, context)}</strong>
-            </p>
-          )}
+          <FeedbackAnswer
+            answerText={result === 'incorrect' ? correctAnswerText(item, context) : null}
+            speechText={speakableText(item, context)}
+            lang={lang}
+          />
           {item.explanation && (
             <p className="exercise-feedback__explanation">{item.explanation}</p>
           )}
@@ -143,6 +149,21 @@ function LessonPlayer({ course, lesson, onRestart }) {
         mapPath={coursePath(course.id)}
       />
     </ExerciseContainer>
+  )
+}
+
+function FeedbackAnswer({ answerText, speechText, lang }) {
+  if (!answerText && !speechText) return null
+
+  return (
+    <p className="exercise-feedback__answer">
+      {answerText && (
+        <span>
+          Respuesta: <strong lang={lang}>{answerText}</strong>
+        </span>
+      )}
+      <SpeakButton text={speechText} lang={lang} label="Escuchar la respuesta" />
+    </p>
   )
 }
 

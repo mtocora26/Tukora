@@ -178,6 +178,12 @@
   margin: 0;
 }
 
+.exercise-feedback__answer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .exercise-feedback__answer strong {
   color: var(--text-h);
 }

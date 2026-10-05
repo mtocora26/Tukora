@@ -99,6 +99,14 @@ export function correctAnswerText(exercise, { alphabet = [] } = {}) {
   }
 }
 
+/**
+ * Text worth reading aloud in the course language after answering, or null.
+ * Match exercises mix both languages, so they are not read.
+ */
+export function speakableText(exercise, context) {
+  return exercise.type === 'match' ? null : correctAnswerText(exercise, context)
+}
+
 export function isCorrectPair(exercise, [left, right]) {
   return exercise.pairs.some(([l, r]) => l === left && r === right)
 }

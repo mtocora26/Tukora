@@ -1,15 +1,20 @@
-/** Renders the theory blocks of a lesson (see THEORY_BLOCK_TYPES). */
-function LessonTheory({ blocks }) {
+import SpeakButton from '../../ui/SpeakButton.jsx'
+
+/**
+ * Renders the theory blocks of a lesson (see THEORY_BLOCK_TYPES).
+ * `lang` is the voice language for examples, e.g. "it-IT".
+ */
+function LessonTheory({ blocks, lang }) {
   return (
     <div className="theory">
       {blocks.map((block, i) => (
-        <TheoryBlock key={i} block={block} />
+        <TheoryBlock key={i} block={block} lang={lang} />
       ))}
     </div>
   )
 }
 
-function TheoryBlock({ block }) {
+function TheoryBlock({ block, lang }) {
   switch (block.type) {
     case 'text':
       return <p>{block.text}</p>
@@ -25,7 +30,10 @@ function TheoryBlock({ block }) {
     case 'example':
       return (
         <figure className="theory__example">
-          <blockquote lang="it">{block.text}</blockquote>
+          <div className="theory__example-text">
+            <blockquote lang={lang}>{block.text}</blockquote>
+            <SpeakButton text={block.text} lang={lang} />
+          </div>
           <figcaption>{block.translation}</figcaption>
         </figure>
       )
