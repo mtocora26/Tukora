@@ -1,0 +1,31 @@
+// Alfabeto telefónico italiano: "[letra] di [ciudad]".
+// La primera ciudad de cada letra es la más usada; las demás también se aceptan.
+// J, K, W, X, Y son letras extranjeras: se nombran, no se asocian a una ciudad.
+export const ITALIAN_ALPHABET = Object.freeze([
+  { letter: 'A', name: 'a', cities: ['Ancona', 'Alessandria', 'Asti'] },
+  { letter: 'B', name: 'bi', cities: ['Bologna', 'Bari', 'Brescia'] },
+  { letter: 'C', name: 'ci', cities: ['Como', 'Catania', 'Cagliari'] },
+  { letter: 'D', name: 'di', cities: ['Domodossola'] },
+  { letter: 'E', name: 'e', cities: ['Empoli'] },
+  { letter: 'F', name: 'effe', cities: ['Firenze', 'Ferrara'] },
+  { letter: 'G', name: 'gi', cities: ['Genova'] },
+  { letter: 'H', name: 'acca', cities: ['Hotel'] },
+  { letter: 'I', name: 'i', cities: ['Imola', 'Imperia'] },
+  { letter: 'J', name: 'i lunga', cities: [] },
+  { letter: 'K', name: 'cappa', cities: [] },
+  { letter: 'L', name: 'elle', cities: ['Livorno', 'Lecce'] },
+  { letter: 'M', name: 'emme', cities: ['Milano', 'Messina'] },
+  { letter: 'N', name: 'enne', cities: ['Napoli', 'Novara'] },
+  { letter: 'O', name: 'o', cities: ['Otranto', 'Oristano'] },
+  { letter: 'P', name: 'pi', cities: ['Palermo', 'Padova', 'Pisa'] },
+  { letter: 'Q', name: 'cu', cities: ['Quarto'] },
+  { letter: 'R', name: 'erre', cities: ['Roma', 'Rimini'] },
+  { letter: 'S', name: 'esse', cities: ['Savona', 'Salerno', 'Sassari'] },
+  { letter: 'T', name: 'ti', cities: ['Torino', 'Taranto', 'Trieste'] },
+  { letter: 'U', name: 'u', cities: ['Udine'] },
+  { letter: 'V', name: 'vu', cities: ['Venezia', 'Verona'] },
+  { letter: 'W', name: 'doppia vu', cities: [] },
+  { letter: 'X', name: 'ics', cities: [] },
+  { letter: 'Y', name: 'ipsilon', cities: [] },
+  { letter: 'Z', name: 'zeta', cities: ['Zara'] },
+])
