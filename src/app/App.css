@@ -17,3 +17,42 @@
   margin: 0 auto;
   padding: 24px 16px;
 }
+
+.home__courses {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.course-card:hover {
+  border-color: var(--accent);
+}
+
+.course-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.course-card__meta {
+  font-size: 14px;
+}
+
+.home__demo {
+  font-size: 14px;
+}

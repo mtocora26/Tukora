@@ -1,3 +1,7 @@
+export function coursePath(courseId) {
+  return `/curso/${courseId}`
+}
+
 export function lessonPath(courseId, lessonId) {
-  return `/curso/${courseId}/leccion/${lessonId}`
+  return `${coursePath(courseId)}/leccion/${lessonId}`
 }

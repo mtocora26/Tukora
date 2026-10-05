@@ -3,7 +3,10 @@ import { SAVE_STATUSES } from '../../hooks/useExerciseProgress.js'
 
 const MAX_STARS = 3
 
-function LessonResult({ stars, xp, progress, nextLessonPath }) {
+function LessonResult({ stars, xp, progress, nextLessonPath, mapPath }) {
+  // Wait for the save: the next lesson unlocks from the stored progress.
+  const saved = progress.saveStatus === SAVE_STATUSES.SAVED
+
   return (
     <div className="lesson-result">
       <p className="lesson-result__stars" aria-label={`${stars} de ${MAX_STARS} estrellas`}>
@@ -31,8 +34,10 @@ function LessonResult({ stars, xp, progress, nextLessonPath }) {
       <SaveNote {...progress} />
 
       <nav className="lesson-result__links">
-        {nextLessonPath && <Link to={nextLessonPath}>Siguiente lección →</Link>}
-        <Link to="/">Volver a las lecciones</Link>
+        {nextLessonPath && saved && (
+          <Link to={nextLessonPath}>Siguiente lección →</Link>
+        )}
+        <Link to={mapPath}>Volver al mapa</Link>
       </nav>
     </div>
   )
