@@ -4,6 +4,9 @@ export const EXERCISE_STATUSES = Object.freeze([
   'completed',
 ])
 
+// Days kept for streaks; older ones are dropped to keep the document small.
+export const MAX_ACTIVITY_DAYS = 366
+
 export function createEmptyProgress(courseId) {
   assertIdentifier(courseId, 'courseId')
 
@@ -39,25 +42,43 @@ export function validateProgress(courseId, progress) {
 
   assertNullableTimestamp(progress.updatedAt, 'progress.updatedAt')
 
+  // Optional: documents saved before streaks existed do not have it.
+  if (progress.activityDays !== undefined) {
+    if (
+      !Array.isArray(progress.activityDays) ||
+      !progress.activityDays.every(isDateKey)
+    ) {
+      throw new TypeError('progress.activityDays must be a list of YYYY-MM-DD dates')
+    }
+  }
+
   return {
     courseId,
     exercises,
     updatedAt: progress.updatedAt,
+    ...(progress.activityDays && { activityDays: [...progress.activityDays] }),
   }
 }
 
 /**
  * Returns a copy of `progress` with one more completed attempt of an exercise.
  * `score` is the latest attempt, `bestScore` the highest one, `xp` accumulates
- * and `completedAt` keeps the first completion date.
+ * and `completedAt` keeps the first completion date. `today` (local
+ * "YYYY-MM-DD") is added to `activityDays`, used for streaks.
  *
  * @param {object} progress
- * @param {{ exerciseId: string, score: number, xp?: number, now: string }} attempt
+ * @param {{ exerciseId: string, score: number, xp?: number, now: string, today?: string }} attempt
  * @returns {object}
  */
-export function recordExerciseAttempt(progress, { exerciseId, score, xp = 0, now }) {
+export function recordExerciseAttempt(
+  progress,
+  { exerciseId, score, xp = 0, now, today = now.slice(0, 10) },
+) {
   assertIdentifier(exerciseId, 'exerciseId')
   assertTimestamp(now, 'now')
+  if (!isDateKey(today)) {
+    throw new TypeError('today must be a YYYY-MM-DD date')
+  }
 
   const previous = progress.exercises[exerciseId]
   const exercise = {
@@ -72,9 +93,13 @@ export function recordExerciseAttempt(progress, { exerciseId, score, xp = 0, now
   }
   validateExerciseProgress(exerciseId, exercise)
 
+  const days = new Set(progress.activityDays ?? [])
+  days.add(today)
+
   return {
     ...progress,
     exercises: { ...progress.exercises, [exerciseId]: exercise },
+    activityDays: [...days].sort().slice(-MAX_ACTIVITY_DAYS),
   }
 }
 
@@ -148,6 +173,10 @@ function assertNullableTimestamp(value, name) {
   if (value !== null) {
     assertTimestamp(value, name)
   }
+}
+
+function isDateKey(value) {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
 }
 
 function isRecord(value) {

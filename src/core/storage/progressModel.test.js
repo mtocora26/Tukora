@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { createEmptyProgress, recordExerciseAttempt } from './progressModel.js'
+import {
+  createEmptyProgress,
+  MAX_ACTIVITY_DAYS,
+  recordExerciseAttempt,
+  validateProgress,
+} from './progressModel.js'
 
 const FIRST = '2026-10-04T10:00:00.000Z'
 const SECOND = '2026-10-05T10:00:00.000Z'
@@ -109,4 +114,52 @@ test('upgrades records saved before bestScore and xp existed', () => {
 
   assert.equal(next.exercises['saluti-1'].bestScore, 70)
   assert.equal(next.exercises['saluti-1'].xp, 10)
+})
+
+test('records each study day once, sorted', () => {
+  let progress = createEmptyProgress('italian-a1')
+  for (const [exerciseId, today] of [
+    ['a', '2026-10-04'],
+    ['b', '2026-10-02'],
+    ['a', '2026-10-04'],
+  ]) {
+    progress = recordExerciseAttempt(progress, {
+      exerciseId,
+      score: 100,
+      now: FIRST,
+      today,
+    })
+  }
+
+  assert.deepEqual(progress.activityDays, ['2026-10-02', '2026-10-04'])
+})
+
+test('keeps only the most recent activity days', () => {
+  const progress = {
+    ...createEmptyProgress('italian-a1'),
+    activityDays: Array.from({ length: MAX_ACTIVITY_DAYS }, (_, i) =>
+      new Date(Date.UTC(2024, 0, 1 + i)).toISOString().slice(0, 10),
+    ),
+  }
+  const next = recordExerciseAttempt(progress, {
+    exerciseId: 'a',
+    score: 100,
+    now: FIRST,
+    today: '2026-10-04',
+  })
+
+  assert.equal(next.activityDays.length, MAX_ACTIVITY_DAYS)
+  assert.equal(next.activityDays.at(-1), '2026-10-04')
+  assert.equal(next.activityDays[0], '2024-01-02')
+})
+
+test('validateProgress keeps activity days and rejects invalid ones', () => {
+  const progress = { ...createEmptyProgress('italian-a1'), activityDays: ['2026-10-04'] }
+
+  assert.deepEqual(validateProgress('italian-a1', progress).activityDays, ['2026-10-04'])
+  assert.equal('activityDays' in validateProgress('italian-a1', createEmptyProgress('italian-a1')), false)
+  assert.throws(
+    () => validateProgress('italian-a1', { ...progress, activityDays: ['4/10/2026'] }),
+    /activityDays/,
+  )
 })
