@@ -101,3 +101,27 @@
   font-weight: 700;
   color: var(--text-h);
 }
+
+.exercise__phase {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.exercise__combo {
+  font-weight: 700;
+  color: var(--text-h);
+  animation: pop 0.25s ease-out;
+}
+
+@keyframes pop {
+  from { transform: scale(1.5); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exercise__combo {
+    animation: none;
+  }
+}

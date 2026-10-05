@@ -1,15 +1,16 @@
+import { NEXT_STEPS } from '../../core/session/studySession.js'
 import { EXERCISE_STATES } from '../../hooks/useExercise.js'
 import './ExerciseContainer.css'
 
 /**
  * Generic shell for any exercise that follows the `useExercise` contract
- * (`{ state, answer, next, stats }`). It owns the shared flow — progress,
- * feedback, "next" and the final summary — while each exercise type only
+ * (`{ state, answer, next, start, stats }`). It owns the shared flow — progress,
+ * combo, feedback, review of mistakes and the final summary — while each exercise type only
  * provides how an item is shown and how it is answered.
  *
  * @param {object} props
  * @param {string} props.title
- * @param {{ state: object, answer: Function, next: Function, stats: object }} props.exercise
+ * @param {{ state: object, answer: Function, next: Function, start: Function, stats: object }} props.exercise
  * @param {(item: unknown) => React.ReactNode} props.renderPrompt
  * @param {(args: { item: unknown, onAnswer: Function, disabled: boolean }) => React.ReactNode} props.renderAnswer
  * @param {(args: { item: unknown, answer: unknown, result: string }) => React.ReactNode} [props.renderFeedback]
@@ -26,9 +27,20 @@ function ExerciseContainer({
   onRestart,
   children,
 }) {
-  const { state, answer, next, stats } = exercise
+  const { state, answer, next, start, stats } = exercise
 
-  if (state.status === EXERCISE_STATES.COMPLETED) {
+  if (state.status === EXERCISE_STATES.IDLE) {
+    return (
+      <section className="exercise">
+        <h2>{title}</h2>
+        <button type="button" onClick={start} autoFocus>
+          Empezar
+        </button>
+      </section>
+    )
+  }
+
+  if (state.status === EXERCISE_STATES.DONE) {
     return (
       <section className="exercise">
         <h2>{title}</h2>
@@ -40,22 +52,26 @@ function ExerciseContainer({
   }
 
   const answered = state.result !== null
-  const isLastItem = state.currentIndex === state.totalItems - 1
+  const reviewing = state.status === EXERCISE_STATES.REVIEWING
 
   return (
     <section className="exercise">
       <header className="exercise__header">
         <h2>{title}</h2>
+        {reviewing && (
+          <p className="exercise__phase">Repaso: corrige tus errores</p>
+        )}
         <ExerciseProgress
-          current={state.currentIndex + 1}
-          total={state.totalItems}
+          current={state.position + 1}
+          total={state.queueLength}
+          combo={stats.combo}
         />
       </header>
 
       <div className="exercise__prompt">{renderPrompt(state.currentItem)}</div>
 
-      {/* `key` resets any internal state of the answer UI between items. */}
-      <div key={state.currentIndex} className="exercise__answer">
+      {/* `key` resets the answer UI on every step, even if an item repeats. */}
+      <div key={state.step} className="exercise__answer">
         {renderAnswer({
           item: state.currentItem,
           onAnswer: answer,
@@ -77,7 +93,7 @@ function ExerciseContainer({
             result: state.result,
           })}
           <button type="button" onClick={next} autoFocus>
-            {isLastItem ? 'Ver resultado' : 'Siguiente'}
+            {NEXT_LABELS[state.nextStep]}
           </button>
         </div>
       )}
@@ -85,13 +101,26 @@ function ExerciseContainer({
   )
 }
 
-function ExerciseProgress({ current, total }) {
+const NEXT_LABELS = {
+  [NEXT_STEPS.ITEM]: 'Siguiente',
+  [NEXT_STEPS.REVIEW]: 'Repasar errores',
+  [NEXT_STEPS.DONE]: 'Ver resultado',
+}
+
+const MIN_COMBO_SHOWN = 2
+
+function ExerciseProgress({ current, total, combo }) {
   return (
     <div className="exercise__progress">
       <span>
         {current} / {total}
       </span>
       <progress value={current - 1} max={total} aria-label="Progreso" />
+      {combo >= MIN_COMBO_SHOWN && (
+        <span key={combo} className="exercise__combo" aria-label={`Combo de ${combo}`}>
+          🔥 {combo}
+        </span>
+      )}
     </div>
   )
 }

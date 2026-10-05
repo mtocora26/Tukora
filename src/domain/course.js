@@ -83,6 +83,17 @@ export function findLesson(course, lessonId) {
   return null
 }
 
+/** Lessons in course order, across modules. */
+export function listLessons(course) {
+  return course.modules.flatMap((module) => module.lessons)
+}
+
+export function findNextLesson(course, lessonId) {
+  const lessons = listLessons(course)
+  const index = lessons.findIndex((lesson) => lesson.id === lessonId)
+  return index === -1 ? null : (lessons[index + 1] ?? null)
+}
+
 function validateAlphabet(alphabet, path) {
   assertNonEmptyArray(alphabet, path)
   const letters = new Set()

@@ -1,24 +1,32 @@
 import { useReducer } from 'react'
+import {
+  createStudySession,
+  currentItemIndex,
+  peekNextStep,
+  SESSION_PHASES,
+  studySessionReducer,
+} from '../core/session/studySession.js'
 
-export const EXERCISE_STATES = Object.freeze({
-  ACTIVE: 'active',
-  COMPLETED: 'completed',
-})
-
-const INITIAL_STATS = Object.freeze({
-  answered: 0,
-  correct: 0,
-  incorrect: 0,
-  accuracy: 0,
-})
+export const EXERCISE_STATES = SESSION_PHASES
 
 /**
- * Shared contract for exercise implementations.
+ * Shared contract for exercise implementations, backed by the study session
+ * state machine (`core/session/studySession.js`).
  *
- * @param {{ items: Array, validateAnswer: (answer: unknown, item: unknown) => boolean }} options
- * @returns {{ state: object, answer: Function, next: Function, stats: object }}
+ * @param {{
+ *   items: Array,
+ *   validateAnswer: (answer: unknown, item: unknown) => boolean,
+ *   reviewMistakes?: boolean,
+ *   startImmediately?: boolean,
+ * }} options
+ * @returns {{ state: object, answer: Function, next: Function, start: Function, stats: object }}
  */
-export function useExercise({ items, validateAnswer }) {
+export function useExercise({
+  items,
+  validateAnswer,
+  reviewMistakes = false,
+  startImmediately = true,
+}) {
   if (!Array.isArray(items) || items.length === 0) {
     throw new TypeError('useExercise items must be a non-empty array')
   }
@@ -27,85 +35,46 @@ export function useExercise({ items, validateAnswer }) {
     throw new TypeError('useExercise validateAnswer must be a function')
   }
 
-  const [exercise, dispatch] = useReducer(
-    exerciseReducer,
-    undefined,
-    createInitialExerciseState,
+  const [session, dispatch] = useReducer(
+    studySessionReducer,
+    { totalItems: items.length, reviewMistakes, startImmediately },
+    createStudySession,
   )
 
+  const itemIndex = currentItemIndex(session)
+
   const state = {
-    status: exercise.status,
-    currentIndex: exercise.currentIndex,
+    status: session.phase,
+    currentIndex: itemIndex,
+    currentItem: itemIndex === null ? null : items[itemIndex],
     totalItems: items.length,
-    currentItem: items[exercise.currentIndex] ?? null,
-    answer: exercise.currentAnswer,
-    result: exercise.currentResult,
+    position: session.position,
+    queueLength: session.queue.length,
+    step: session.step,
+    nextStep: peekNextStep(session),
+    answer: session.currentAnswer,
+    result: session.currentResult,
   }
 
   function answer(value) {
-    if (exercise.currentResult !== null) {
+    if (itemIndex === null || session.currentResult !== null) {
       return
     }
 
     dispatch({
       type: 'answer',
       value,
-      correct: validateAnswer(value, items[exercise.currentIndex]),
+      correct: validateAnswer(value, items[itemIndex]),
     })
   }
 
   function next() {
-    if (exercise.currentResult === null) {
-      return
-    }
-
-    dispatch({ type: 'next', totalItems: items.length })
+    dispatch({ type: 'next' })
   }
 
-  return { state, answer, next, stats: exercise.stats }
-}
-
-export function createInitialExerciseState() {
-  return {
-    currentIndex: 0,
-    currentAnswer: null,
-    currentResult: null,
-    status: EXERCISE_STATES.ACTIVE,
-    stats: { ...INITIAL_STATS },
-  }
-}
-
-export function exerciseReducer(state, action) {
-  if (action.type === 'answer') {
-    const answered = state.stats.answered + 1
-    const correct = state.stats.correct + (action.correct ? 1 : 0)
-    const incorrect = answered - correct
-
-    return {
-      ...state,
-      currentAnswer: action.value,
-      currentResult: action.correct ? 'correct' : 'incorrect',
-      stats: {
-        answered,
-        correct,
-        incorrect,
-        accuracy: Math.round((correct / answered) * 100),
-      },
-    }
+  function start() {
+    dispatch({ type: 'start' })
   }
 
-  if (action.type === 'next') {
-    const nextIndex = state.currentIndex + 1
-    const completed = nextIndex >= action.totalItems
-
-    return {
-      ...state,
-      currentIndex: completed ? state.currentIndex : nextIndex,
-      currentAnswer: null,
-      currentResult: null,
-      status: completed ? EXERCISE_STATES.COMPLETED : EXERCISE_STATES.ACTIVE,
-    }
-  }
-
-  return state
+  return { state, answer, next, start, stats: session.stats }
 }
